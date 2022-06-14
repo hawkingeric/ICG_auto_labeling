@@ -7,6 +7,7 @@ from skimage.filters import gaussian
 from skimage .segmentation import active_contour
 from skimage import measure
 import random
+import time
 
 
 
@@ -113,6 +114,7 @@ img_mblur = cv2.medianBlur(img, 5) #---median blurring
 #cv2.waitKey(0)
 img_gray = cv2.cvtColor(img_ablur, cv2.COLOR_BGR2GRAY)
 brightest_pixel = np.max(img_gray)
+print(brightest_pixel)
 darkest_pixel = np.min(img_gray)
 
 #---create title window
@@ -129,7 +131,16 @@ createGUI()
 sc = 0
 st = 0
 area_thresh=10000
+
+def f():
+    for i in range(10000):
+        "-".join(str(n) for n in range(100))
+    time.sleep(1)
+
+
 while(1):
+	start = time.process_time()
+	#f()	
 	img_shown = img.copy()
 	sc_last = sc
 	st_last = st
@@ -155,14 +166,17 @@ while(1):
 			color=(0, 255, 0)
 		contours_selected=[]
 		for contour in contours:
-			area = cv2.contourArea(contour)  #計算面積
-			if area < area_thresh:
-				continue
+			# area = cv2.contourArea(contour)  #計算面積
+			# if area < area_thresh:
+			# 	continue
 			contours_selected.append(contour)
 
 		drawUserDefinedContours(img_shown, contours_selected, color)
 		label_contours(img_shown, contours_selected)		
 	cv2.imshow(title_window, img_shown)
+	end = time.process_time()	
+#	print("process_time 測量時間：%f 秒" % (end - start))
+#	print("FPS：%f" % float(1/(end - start)))
 #	cv2.waitKey(0)
 	k = cv2.waitKey(1) & 0xFF
 	if k == 27:
